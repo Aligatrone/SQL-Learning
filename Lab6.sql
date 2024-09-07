@@ -52,3 +52,6 @@ select max(avg(n.valoare)) from studenti s join note n on s.nr_matricol = n.nr_m
 -- Un profesor este iubit de studenti daca pune note mai mari (adica media notelor sale este mai mare).
 -- Afisati toti profesorii in ordinea preferintelor studentilor impreuna cu mediile notelor puse de ei scrise cu doua zecimale.
 select p.nume, trunc(avg(n.valoare), 2) from profesori p join didactic d on p.id_prof = d.id_prof join note n on d.id_curs = n.id_curs group by p.id_prof, p.nume, p.prenume order by avg(n.valoare) desc;
+
+-- Afisati numarul de restantieri generati de FIECARE profesor (tip: 1 cu 2 restantieri, 4 cu 1 restantier, 11 cu 0 restantieri)
+select count(*)||' cu '||val||decode(val, 1, ' restantier', ' restantieri') from (select p.id_prof, count(n.valoare) val from profesori p left join didactic d on p.id_prof = d.id_prof left join (select id_curs, decode(valoare, 4, '4', '') valoare from note) n on d.id_curs = n.id_curs group by p.id_prof) group by val; 
